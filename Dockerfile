@@ -27,12 +27,11 @@ ENV GNUPGHOME=/gpg
 ENV BACKUP_SOURCE=/backup
 VOLUME /backup
 
-
-# we don't add VOLUME entries for /etc/duply[/data] & /opt/gpg as this would create the directories
+# we don't add VOLUME entries for /etc/duply[/data] & /gpg as this would create the directories
 # and we would have no way to check if they were mounted or not. Also the existence of /etc/duply/data
 # would cause "duply data create" to fail
 # VOLUME /etc/duply
-# VOLUME /opt/gpg
+# VOLUME /gpg
 
 # prepare a default crontab, can be customized by mounting a modified file
 COPY crontab /var/spool/cron/crontabs/root
@@ -42,5 +41,5 @@ COPY entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["docker-entrypoint"]
 
-# -f = foreground, -l = loglevel 12 = errored tasks + PID of all tasks
+# -f = foreground, -l = loglevel
 CMD ["/usr/sbin/crond", "-f", "-l", "7"]
