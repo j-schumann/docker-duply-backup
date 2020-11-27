@@ -63,16 +63,24 @@ else
     # when the container is recreated the hostname changes, which will cause:
     # "Aborting because you may have accidentally tried to backup two different data sets to the same remote location"
     echo 'DUPL_PARAMS="$DUPL_PARAMS --allow-source-mismatch "' >> /etc/duply/data/conf
+
+    [ -z $BACKUP_TARGET ] && echo "No BACKUP_TARGET set and no pre-configured profile used, please edit the profile manually or set the variable and restart the container!" && exit 1
 fi
 
-echo "Setting key, passphrase, source & target in profile if not yet set..."
+echo "Setting key and passphrase in the profile if not yet set..."
 sed -i \
     -e "s#_KEY_ID_#$GPG_KEY_ID#g" \
     -e "s#_GPG_PASSWORD_#$GPG_PASSPHRASE#g" \
     -e "s#/path/of/source#$BACKUP_SOURCE#g" \
-    -e "s#TARGET=.*#TARGET='$BACKUP_TARGET'#g" \
     -e "s/#GPG_OPTS=.*/GPG_OPTS='--pinentry-mode loopback'/g" \
     /etc/duply/data/conf
+
+if [ ! -z $BACKUP_TARGET ]; then
+    echo "Setting the backup target in the profile..."
+    sed -i \
+	-e "s#TARGET=.*#TARGET='$BACKUP_TARGET'#g" \
+        /etc/duply/data/conf
+fi
 
 echo "Starting container command..."
 exec "$@"
