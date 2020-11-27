@@ -6,6 +6,7 @@ RUN apk upgrade --update \
     && apk add -U \
       duply \
       lftp \
+      mysql-client \
       pwgen \
       py-pip \
       tzdata \
