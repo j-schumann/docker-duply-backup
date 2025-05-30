@@ -1,4 +1,4 @@
-FROM alpine:3.21
+FROM alpine:3.22
 
 # hardcoded TZ= Europe/Berlin
 # py-pip is only for the fix below
